@@ -1,5 +1,5 @@
 const URL_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3333';
-const CHAVE_TOKEN = 'locadora:token';
+const CHAVE_TOKEN = 'Projeto-Locadora-de-Veiculos:token';
 
 let aoNaoAutorizado = null;
 

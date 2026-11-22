@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import { listarVeiculos } from '../api/veiculosApi.js';
 import Mensagem from '../components/Mensagem.jsx';
 import VeiculoForm from '../components/VeiculoForm.jsx';
@@ -14,6 +15,8 @@ const FILTROS = [
 
 export default function VeiculosPage() {
   const navigate = useNavigate();
+  const { usuario } = useAuth();
+  const ehAdmin = usuario?.perfil === 'ADMIN';
   const [veiculos, setVeiculos] = useState([]);
   const [filtro, setFiltro] = useState('todos');
   const [carregando, setCarregando] = useState(true);
@@ -51,7 +54,7 @@ export default function VeiculosPage() {
     <div className="pagina">
       <h1>Veículos</h1>
       <Mensagem mensagem={mensagem} aoFechar={() => setMensagem(null)} />
-      <VeiculoForm aoCadastrar={aoCadastrar} aoErro={aoErro} />
+      {ehAdmin && <VeiculoForm aoCadastrar={aoCadastrar} aoErro={aoErro} />}
       <section className="cartao">
         <div className="cabecalho-secao">
           <h2>Frota</h2>

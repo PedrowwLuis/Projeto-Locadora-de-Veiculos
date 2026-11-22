@@ -4,6 +4,7 @@ export const camposPublicos = {
   id: true,
   nome: true,
   email: true,
+  perfil: true,
   criadoEm: true,
 };
 

@@ -34,9 +34,10 @@ export async function cadastrar(dados) {
   const senhaHash = await bcrypt.hash(senha, env.bcryptRounds);
 
   return prisma.usuario.create({
-    data: { nome, email, senhaHash },
+    data: { nome, email, senhaHash, perfil: 'USUARIO' },
     select: camposPublicos,
   });
+
 }
 
 export async function entrar(dados) {
@@ -65,6 +66,7 @@ export async function entrar(dados) {
       id: usuario.id,
       nome: usuario.nome,
       email: usuario.email,
+      perfil: usuario.perfil,
       criadoEm: usuario.criadoEm,
     },
   };

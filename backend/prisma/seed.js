@@ -4,7 +4,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const EMAIL_DEMO = 'demo@locadora.com';
+const EMAIL_ADMIN = 'admin@projeto-locadora-de-veiculos.com';
+const SENHA_ADMIN = 'Admin@123';
+const EMAIL_DEMO = 'demo@projeto-locadora-de-veiculos.com';
 const SENHA_DEMO = 'Demo@123';
 const MILISSEGUNDOS_POR_DIA = 24 * 60 * 60 * 1000;
 
@@ -19,13 +21,13 @@ const veiculosIniciais = [
   { marca: 'Honda', modelo: 'Civic', placa: 'RST8U45', ano: 2024, valorDiaria: 300 },
 ];
 
-async function criarUsuarioDemo() {
-  const senhaHash = await bcrypt.hash(SENHA_DEMO, 10);
+async function criarUsuario({ nome, email, senha, perfil }) {
+  const senhaHash = await bcrypt.hash(senha, 10);
 
   return prisma.usuario.upsert({
-    where: { email: EMAIL_DEMO },
-    update: {},
-    create: { nome: 'Usuário Demonstração', email: EMAIL_DEMO, senhaHash },
+    where: { email },
+    update: { perfil },
+    create: { nome, email, senhaHash, perfil },
   });
 }
 
@@ -90,11 +92,24 @@ async function criarHistorico(usuario, veiculos) {
 }
 
 async function main() {
-  const usuario = await criarUsuarioDemo();
+  await criarUsuario({
+    nome: 'Administrador',
+    email: EMAIL_ADMIN,
+    senha: SENHA_ADMIN,
+    perfil: 'ADMIN',
+  });
+  const usuarioDemo = await criarUsuario({
+    nome: 'Usuário Demonstração',
+    email: EMAIL_DEMO,
+    senha: SENHA_DEMO,
+    perfil: 'USUARIO',
+  });
   const veiculos = await criarVeiculos();
-  await criarHistorico(usuario, veiculos);
+  await criarHistorico(usuarioDemo, veiculos);
 
-  console.log(`Seed concluído. Login de demonstração: ${EMAIL_DEMO} / ${SENHA_DEMO}`);
+  console.log(`Seed concluído.`);
+  console.log(`Administrador: ${EMAIL_ADMIN} / ${SENHA_ADMIN}`);
+  console.log(`Usuário comum: ${EMAIL_DEMO} / ${SENHA_DEMO}`);
 }
 
 main()

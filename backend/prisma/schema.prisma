@@ -12,11 +12,17 @@ enum StatusLocacao {
   FINALIZADA
 }
 
+enum Perfil {
+  ADMIN
+  USUARIO
+}
+
 model Usuario {
   id        Int       @id @default(autoincrement())
   nome      String    @db.VarChar(120)
   email     String    @unique @db.VarChar(191)
   senhaHash String    @db.VarChar(100)
+  perfil    Perfil    @default(USUARIO)
   criadoEm  DateTime  @default(now())
   locacoes  Locacao[]
 }
